@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <base target="_blank" />
+    <title>Media Recorder API Demo - addpipe.com</title>
+
+    <link rel="stylesheet" href="css/main.css" />
+  </head>
+  <body>
+    <div>
+      <h1>Media Recorder API Demo</h1>
+      <div>
+        <div style="display: flex; gap: 3px">
+          <video id="live" controls autoplay playsinline muted></video>
+          <video id="playback" controls autoplay></video>
+        </div>
+        <br />
+        <div id="controls">
+          <button id="rec" onclick="onBtnRecordClicked()">Record</button>
+          <button id="pauseRes" onclick="onPauseResumeClicked()" disabled>
+            Pause
+          </button>
+          <button id="stop" onclick="onBtnStopClicked()" disabled>Stop</button>
+          <button id="stateButton" onclick="onStateClicked()">
+            trace state
+          </button>
+        </div>
+      </div>
+      <a
+        id="downloadLink"
+        download="mediarecorder.webm"
+        name="mediarecorder.webm"
+        href
+      ></a>
+      <p id="data"></p>
+      <script src="js/adapter-latest.js"></script>
+      <script src="js/main.js"></script>
+    </div>
+  </body>
+</html>
