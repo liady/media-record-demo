@@ -24,6 +24,8 @@ var downloadLink = document.querySelector("a#downloadLink");
 liveVideoElement.controls = false;
 playbackVideoElement.controls = false;
 
+let captureStream;
+
 var mediaRecorder;
 var chunks = [];
 var count = 0;
@@ -71,6 +73,7 @@ if (!navigator.mediaDevices.getUserMedia) {
 
         liveVideoElement.srcObject = localStream;
         liveVideoElement.play();
+        captureStream = liveVideoElement.captureStream();
 
         try {
           window.AudioContext =
@@ -103,6 +106,8 @@ function onBtnRecordClicked() {
   if (localStream == null) {
     alert("Could not get local stream from mic/camera");
   } else {
+    playbackVideoElement.srcObject = captureStream;
+
     recBtn.disabled = true;
     pauseResBtn.disabled = false;
     stopBtn.disabled = false;
@@ -137,14 +142,15 @@ function onBtnRecordClicked() {
       log("mediaRecorder.ondataavailable, e.data.size=" + e.data.size);
       if (e.data && e.data.size > 0) {
         chunks.push(e.data);
-        if (chunks.length > 1) {
-          var recording = new Blob(chunks, { type: mediaRecorder.mimeType });
-          playbackVideoElement.pause();
-          const time = playbackVideoElement.currentTime;
-          playbackVideoElement.src = URL.createObjectURL(recording);
-          playbackVideoElement.currentTime = time;
-          playbackVideoElement.play();
-        }
+        // // this is if we want to use the URL method
+        // if (chunks.length > 1) {
+        //   var recording = new Blob(chunks, { type: mediaRecorder.mimeType });
+        //   playbackVideoElement.pause();
+        //   const time = playbackVideoElement.currentTime;
+        //   playbackVideoElement.src = URL.createObjectURL(recording);
+        //   playbackVideoElement.currentTime = time;
+        //   playbackVideoElement.play();
+        // }
       }
     };
 
@@ -153,6 +159,7 @@ function onBtnRecordClicked() {
     };
 
     mediaRecorder.onstart = function () {
+      console.log(captureStream);
       log(
         "mediaRecorder.onstart, mediaRecorder.state = " + mediaRecorder.state
       );
@@ -197,6 +204,7 @@ function onBtnRecordClicked() {
 			      throw err;
 			    }*/
       // Even if they do, they may only support MediaStream
+      playbackVideoElement.srcObject = null;
       playbackVideoElement.src = URL.createObjectURL(recording);
       /*  }
 			} else {
